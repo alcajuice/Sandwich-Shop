@@ -35,8 +35,8 @@ void main() {
     expect(preview.contains('footlong'), isTrue);
     expect(preview.contains('six-inch'), isFalse);
 
-    // Toggle the switch
-    final switchFinder = find.byType(Switch);
+    // Toggle the sandwich size switch (use key to uniquely identify it)
+    final switchFinder = find.byKey(const Key('sandwich_size_switch'));
     expect(switchFinder, findsOneWidget);
     await tester.tap(switchFinder);
     await tester.pumpAndSettle();
@@ -73,5 +73,55 @@ void main() {
     // Now the display should show quantity 1
     expect(zeroFinder, findsNothing);
     expect(oneFinder, findsOneWidget);
+  });
+
+  testWidgets('Both switches toggle independently', (
+    WidgetTester tester,
+  ) async {
+    // Build the app and wait for it to settle
+    await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
+
+    final sizeSwitchFinder = find.byKey(const Key('sandwich_size_switch'));
+    final toastedSwitchFinder = find.byKey(const Key('toasted_switch'));
+
+    expect(sizeSwitchFinder, findsOneWidget);
+    expect(toastedSwitchFinder, findsOneWidget);
+
+    // Read initial values
+    var sizeSwitch = tester.widget<Switch>(sizeSwitchFinder);
+    var toastedSwitch = tester.widget<Switch>(toastedSwitchFinder);
+
+    // Defaults from the app: size is footlong (true), toasted is false
+    expect(sizeSwitch.value, isTrue);
+    expect(toastedSwitch.value, isFalse);
+
+    // Toggle size switch -> should change displayed sandwich type
+    await tester.tap(sizeSwitchFinder);
+    await tester.pumpAndSettle();
+
+    // Verify switch widget value updated
+    sizeSwitch = tester.widget<Switch>(sizeSwitchFinder);
+    expect(sizeSwitch.value, isFalse);
+
+    // Verify the preview text now shows six-inch
+    final previewFinder = find.byWidgetPredicate((w) {
+      if (w is Text)
+        return (w.data ?? w.textSpan?.toPlainText() ?? '').contains(
+          'sandwich(es):',
+        );
+      return false;
+    });
+    final previewText = tester.widget<Text>(previewFinder);
+    final preview =
+        previewText.data ?? previewText.textSpan?.toPlainText() ?? '';
+    expect(preview.contains('six-inch'), isTrue);
+
+    // Toggle toasted switch -> should flip its boolean value
+    await tester.tap(toastedSwitchFinder);
+    await tester.pumpAndSettle();
+
+    toastedSwitch = tester.widget<Switch>(toastedSwitchFinder);
+    expect(toastedSwitch.value, isTrue);
   });
 }
