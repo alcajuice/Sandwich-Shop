@@ -21,7 +21,7 @@ class App extends StatelessWidget {
               children: [
                 OrderItemDisplay(1, '6-inch'),
                 OrderItemDisplay(2, 'Footlong'),
-                OrderItemDisplay(3, 'Mini'),
+                OrderItemDisplay(3, 'Mini.'),
               ],
             ),
           ),
