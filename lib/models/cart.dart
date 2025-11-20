@@ -16,7 +16,12 @@ class CartItem {
 class Cart {
   final List<CartItem> _items = [];
 
-  Cart();
+  /// The currently selected bread type for quick additions.
+  /// This can be set by the UI and will be used as a default
+  /// when creating new sandwiches outside of explicit Sandwich objects.
+  BreadType selectedBreadType;
+
+  Cart({this.selectedBreadType = BreadType.white});
 
   /// Adds [quantity] of [sandwich] to the cart. If an identical sandwich
   /// already exists in the cart, its quantity will be incremented.
