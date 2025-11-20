@@ -238,6 +238,33 @@ class _OrderScreenState extends State<OrderScreen> {
                 ],
               ),
               const SizedBox(height: 20),
+              Card(
+                margin: const EdgeInsets.symmetric(horizontal: 12.0),
+                color: Colors.grey.shade100,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.shopping_cart, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Items: ${_cart.totalQuantity}',
+                            style: normalText,
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Total: £${_cart.calculatePrice().toStringAsFixed(2)}',
+                        style: heading2,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               StyledButton(
                 onPressed: _getAddToCartCallback(),
                 icon: Icons.add_shopping_cart,
